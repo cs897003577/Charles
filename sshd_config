@@ -1,0 +1,10 @@
+LoginGraceTime 1000
+PermitRootLogin yes
+StrictModes yes
+UsePAM yes
+X11Forwarding yes
+PrintMotd no
+ClientAliveInterval 60
+ClientAliveCountMax 3
+AcceptEnv LANG LC_*
+Subsystem	sftp	/usr/lib/openssh/sftp-server

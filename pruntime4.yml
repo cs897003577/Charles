@@ -1,0 +1,38 @@
+version: "3"
+services:
+  pruntime:
+    image: phalanetwork/phala-pruntime
+    container_name: pruntime
+    hostname: pruntime
+    ports:
+     - "8000:8000"
+    devices:
+       - /dev/sgx/enclave
+       - /dev/sgx/provision
+       - /dev/sgx_enclave
+       - /dev/sgx_provision
+       - /dev/isgx
+    environment:
+     - EXTRA_OPTS=--cores=4
+     - ROCKET_ADDRESS=0.0.0.0
+    volumes:
+     - /var/khala-pruntime-data:/root/data
+
+  pherry:
+   image: phalanetwork/phala-pherry
+   container_name: pherry
+   hostname: pherry
+   depends_on: 
+    - pruntime
+   restart: always
+   entrypoint:
+    [
+      "/root/pherry",
+      "-r",
+      "--parachain",
+      "--substrate-ws-endpoint=ws://192.168.168.200:9945",
+      "--collator-ws-endpoint=ws://192.168.168.200:9944",
+      "--pruntime-endpoint=http://pruntime:8000",
+      "--fetch-blocks=512",
+      "--auto-restart"
+    ]
